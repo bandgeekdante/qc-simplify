@@ -8,7 +8,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <h2>
-          Drag and drop to build a quantum circuit!
+          Testing for continuous deployment!
         </h2>
       </header>
     </div>
