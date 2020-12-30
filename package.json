@@ -1,5 +1,5 @@
 {
-  "name": "qcirc-simplify",
+  "name": "qc-simplify",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
