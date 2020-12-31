@@ -1,10 +1,5 @@
 {
-  "auth": {
-    "qcsimplify112b220d": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false
-    }
-  }
+  "auth": {},
+  "api": {},
+  "storage": {}
 }
