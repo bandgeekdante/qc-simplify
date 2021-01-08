@@ -1,21 +1,22 @@
 import React from 'react';
 import { ItemTypes } from './Constants';
-import { canMoveKnight, moveKnight } from './Game';
+import { canPlaceGate, placeGate } from './Logic';
 import Square from './Square';
 import { useDrop } from 'react-dnd';
-import './BoardSquare.css';
+import './CircuitSquare.css';
 
-function BoardSquare({ x, y, children }) {
+function CircuitSquare({ x, y, children }) {
   const black = (x + y) % 2 === 1
   const [{ isOver, canDrop }, drop] = useDrop({
-    accept: ItemTypes.KNIGHT,
-    canDrop: () => canMoveKnight(x, y),
-    drop: () => moveKnight(x, y),
+    accept: ItemTypes.SINGLEQUBITGATE,
+    canDrop: () => canPlaceGate(x, y),
+    drop: () => placeGate(x, y),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop()
     }),
   })
+
   return (
     <div
       ref={drop}
@@ -26,12 +27,11 @@ function BoardSquare({ x, y, children }) {
       }}
     >
       <Square black={black}>{children}</Square>
-      {isOver && !canDrop && <div className='Overlay' style={{backgroundColor: 'red'}} />}
+      {/* {isOver && !canDrop && <div className='Overlay' style={{backgroundColor: 'red'}} />} */}
       {!isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'yellow'}} />}
       {isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'green'}} />}
-      {/* {!isOver && !canDrop && <div className='Overlay' color="gray" />} */}
     </div>
   )
 }
 
-export default BoardSquare
+export default CircuitSquare

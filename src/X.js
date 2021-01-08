@@ -1,17 +1,22 @@
 import React from 'react'
 import { ItemTypes } from './Constants'
-import { DragPreviewImage, useDrag } from 'react-dnd'
+import { useDrag } from 'react-dnd'
+import { removeGate } from './Logic'
 
-function Knight() {
-  const [{ isDragging }, drag, preview] = useDrag({
-    item: { type: ItemTypes.KNIGHT },
+function X() {
+  const [{ isDragging }, drag] = useDrag({
+    item: { type: ItemTypes.SINGLEQUBITGATE },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging()
-    })
+    }),
+    end: (item, monitor) => {
+      if (monitor.didDrop()) {
+        removeGate(0, 0)
+      }
+    }
   })
   return (
     <>
-      <DragPreviewImage connect={preview}/>
       <div
         ref={drag}
         style={{
@@ -21,10 +26,10 @@ function Knight() {
           cursor: 'move',
         }}
       >
-        ♘
+        X
       </div>
     </>
   )
 }
 
-export default Knight
+export default X

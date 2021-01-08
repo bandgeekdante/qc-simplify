@@ -5,8 +5,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Amplify from 'aws-amplify';
 import config from './aws-exports';
-import Board from './Board';
-import { observe } from './Game';
+import Circuit from './Circuit';
+import { observe } from './Logic';
 Amplify.configure(config);
 
 // ReactDOM.render(
@@ -18,8 +18,8 @@ Amplify.configure(config);
 
 const root = document.getElementById('root')
 
-observe((knightPosition) => 
-  ReactDOM.render(<Board knightPosition={knightPosition} />, root)
+observe((placedGates) => 
+  ReactDOM.render(<Circuit placedGates={placedGates} />, root)
 )
 
 // If you want to start measuring performance in your app, pass a function
