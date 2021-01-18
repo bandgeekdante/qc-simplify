@@ -14,17 +14,20 @@ export function observe(o) {
   emitChange()
 }
 
-export function placeGate(toX, toY) {
-  placedGates[toY][toX] = true
-  emitChange()
-}
-
-export function removeGate(fromX, fromY) {
+export function placeGate(fromY, fromX, toY, toX) {
   placedGates[fromY][fromX] = false
+  placedGates[toY][toX] = true
+  if (toX > 0 && placedGates[toY][toX-1] === true) {
+    placedGates[toY][toX] = false
+    placedGates[toY][toX-1] = false
+  } else if (toX < 7 && placedGates[toY][toX+1] === true) {
+    placedGates[toY][toX] = false
+    placedGates[toY][toX+1] = false
+  }
   emitChange()
 }
 
-export function canPlaceGate(toX, toY) {
+export function canPlaceGate(toY, toX) {
   return (
     (toY === 1) && !(placedGates[toY][toX])
   )

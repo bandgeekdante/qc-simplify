@@ -5,24 +5,24 @@ import { DndProvider } from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch'
 
 function renderSquare(i, placedGates) {
-  const x = i % 8
   const y = Math.floor(i / 8)
+  const x = i % 8
 
   return (
     <div
       key={i}
       style={{ width: '12.5%', height: '12.5%' }}
     >
-      <CircuitSquare x={x} y={y}>
-        {renderGate(x, y, placedGates)}
+      <CircuitSquare y={y} x={x}>
+        {renderGate(y, x, placedGates)}
       </CircuitSquare>
     </div>
   )
 }
 
-function renderGate(x, y, placedGates) {
-  if ((placedGates[y][x]) || (x === 0 && y === 0)) {
-    return <X />
+function renderGate(y, x, placedGates) {
+  if ((placedGates[y][x]) || (y === 0 && x === 0)) {
+    return <X y={y} x={x}/>
   }
 }
 

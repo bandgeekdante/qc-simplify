@@ -1,19 +1,15 @@
 import React from 'react'
 import { ItemTypes } from './Constants'
 import { useDrag } from 'react-dnd'
-import { removeGate } from './Logic'
 
-function X() {
+function X({ y, x }) {
   const [{ isDragging }, drag] = useDrag({
-    item: { type: ItemTypes.SINGLEQUBITGATE },
+    item: { type: ItemTypes.SINGLEQUBITGATE,
+            x: x,
+            y: y},
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging()
-    }),
-    end: (item, monitor) => {
-      if (monitor.didDrop()) {
-        removeGate(0, 0)
-      }
-    }
+    })
   })
   return (
     <>

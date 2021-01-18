@@ -5,12 +5,12 @@ import Square from './Square';
 import { useDrop } from 'react-dnd';
 import './CircuitSquare.css';
 
-function CircuitSquare({ x, y, children }) {
+function CircuitSquare({ y, x, children }) {
   const black = (x + y) % 2 === 1
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: ItemTypes.SINGLEQUBITGATE,
-    canDrop: () => canPlaceGate(x, y),
-    drop: () => placeGate(x, y),
+    canDrop: () => canPlaceGate(y, x),
+    drop: (item) => placeGate(item.y, item.x, y, x),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop()
