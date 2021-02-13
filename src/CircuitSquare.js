@@ -6,7 +6,7 @@ import { useDrop } from 'react-dnd';
 import './CircuitSquare.css';
 
 function CircuitSquare({ y, x, children }) {
-  const black = (x + y) % 2 === 1
+  // const black = (x + y) % 2 === 1
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: ItemTypes.SINGLEQUBITGATE,
     canDrop: () => canPlaceGate(y, x),
@@ -23,10 +23,10 @@ function CircuitSquare({ y, x, children }) {
       style={{
         position: 'relative',
         width: '100%',
-        height: '100%',
+        height: '100%'
       }}
     >
-      <Square black={black}>{children}</Square>
+      <Square>{children}</Square>
       {/* {isOver && !canDrop && <div className='Overlay' style={{backgroundColor: 'red'}} />} */}
       {!isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'yellow'}} />}
       {isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'green'}} />}

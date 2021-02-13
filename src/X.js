@@ -20,6 +20,10 @@ function X({ y, x }) {
           fontSize: 25,
           fontWeight: 'bold',
           cursor: 'move',
+          padding: '20%',
+          outline: '2px solid black',
+          background: 'white',
+          zIndex: 1
         }}
       >
         X
