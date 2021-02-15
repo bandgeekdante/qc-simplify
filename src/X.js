@@ -20,7 +20,10 @@ function X({ y, x }) {
           fontSize: 25,
           fontWeight: 'bold',
           cursor: 'move',
-          padding: '20%',
+          paddingTop: '10%',
+          paddingRight: '15%',
+          paddingBottom: '10%',
+          paddingLeft: '15%',
           outline: '2px solid black',
           background: 'white',
           zIndex: 1

@@ -26,7 +26,7 @@ function CircuitSquare({ y, x, children }) {
         height: '100%'
       }}
     >
-      <Square>{children}</Square>
+      <Square y={y}>{children}</Square>
       {/* {isOver && !canDrop && <div className='Overlay' style={{backgroundColor: 'red'}} />} */}
       {!isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'yellow'}} />}
       {isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'green'}} />}

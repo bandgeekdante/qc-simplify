@@ -23,7 +23,7 @@ code {
   justify-content: center;
 }
 
-.square:before {
+.wire:before {
   content: '';
   position: absolute;
   top: 50%;
