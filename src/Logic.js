@@ -14,8 +14,8 @@ export function observe(o) {
   emitChange()
 }
 
-export function placeGate(fromY, fromX, toY, toX) {
-  placedGates[fromY][fromX] = false
+export function placeGate(item, toY, toX) {
+  placedGates[item.y][item.x] = false
   placedGates[toY][toX] = true
   if (toX > 0 && placedGates[toY][toX-1] === true) {
     placedGates[toY][toX] = false
@@ -25,6 +25,17 @@ export function placeGate(fromY, fromX, toY, toX) {
     placedGates[toY][toX+1] = false
   }
   emitChange()
+}
+
+export function slideGate(item, toY, toX) {
+  if (placedGates[toY][toX] && item.y === toY) {
+    placedGates[toY][toX] = false
+    placedGates[item.y][item.x] = true
+    console.log(placedGates)
+    emitChange()
+  }
+  item.x = toX
+  item.y = toY
 }
 
 export function canPlaceGate(toY, toX) {

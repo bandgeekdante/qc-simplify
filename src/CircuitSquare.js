@@ -1,16 +1,17 @@
 import React from 'react';
 import { ItemTypes } from './Constants';
-import { canPlaceGate, placeGate } from './Logic';
+import { canPlaceGate, slideGate, placeGate } from './Logic';
 import Square from './Square';
 import { useDrop } from 'react-dnd';
 import './CircuitSquare.css';
 
 function CircuitSquare({ y, x, children }) {
   // const black = (x + y) % 2 === 1
-  const [{ isOver, canDrop }, drop] = useDrop({
+  const [{ isOver, canDrop}, drop] = useDrop({
     accept: ItemTypes.SINGLEQUBITGATE,
     canDrop: () => canPlaceGate(y, x),
-    drop: (item) => placeGate(item.y, item.x, y, x),
+    drop: (item) => placeGate(item, y, x),
+    hover: (item) => slideGate(item, y, x),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
       canDrop: !!monitor.canDrop()
