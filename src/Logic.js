@@ -14,28 +14,37 @@ export function observe(o) {
   emitChange()
 }
 
-export function placeGate(item, toY, toX) {
-  placedGates[item.y][item.x] = false
-  placedGates[toY][toX] = true
-  if (toX > 0 && placedGates[toY][toX-1] === true) {
-    placedGates[toY][toX] = false
-    placedGates[toY][toX-1] = false
-  } else if (toX < 7 && placedGates[toY][toX+1] === true) {
-    placedGates[toY][toX] = false
-    placedGates[toY][toX+1] = false
+export function cancelOut(y, x) {
+  if (x > 0 && placedGates[y][x-1] === placedGates[y][x]) {
+    placedGates[y][x] = false
+    placedGates[y][x-1] = false
+  } else if (x < 7 && placedGates[y][x+1] === placedGates[y][x]) {
+    placedGates[y][x] = false
+    placedGates[y][x+1] = false
   }
+}
+
+export function placeGate(item) {
+  placedGates[item.y][item.x] = item.gate
+  cancelOut(item.y, item.x)
   emitChange()
 }
 
 export function slideGate(item, toY, toX) {
-  if (placedGates[toY][toX] && item.y === toY) {
+  if (placedGates[toY][toX] === item.gate && item.y === toY && Math.abs(toX-item.x) === 1) {
     placedGates[toY][toX] = false
-    placedGates[item.y][item.x] = true
-    console.log(placedGates)
+    placedGates[item.y][item.x] = item.gate
+    cancelOut(item.y, item.x)
+    item.x = toX
+    item.y = toY
+    emitChange()
+  } else if (canPlaceGate(toY, toX)) {
+    placedGates[item.y][item.x] = false
+    // placedGates[toY][toX] = item.gate
+    item.x = toX
+    item.y = toY
     emitChange()
   }
-  item.x = toX
-  item.y = toY
 }
 
 export function canPlaceGate(toY, toX) {
