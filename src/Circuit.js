@@ -1,6 +1,5 @@
 import React from 'react'
 import SingleQubitGate from './SingleQubitGate'
-// import Z from './Z'
 import CircuitSquare from './CircuitSquare'
 import { DndProvider } from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch'
@@ -26,6 +25,8 @@ function renderGate(y, x, placedGates) {
     return <SingleQubitGate name={'X'} y={y} x={x}/>
   } else if ((placedGates[y][x] === 'Z') || (y === 0 && x === 1)) {
     return <SingleQubitGate name={'Z'} y={y} x={x}/>
+  } else if ((placedGates[y][x] === 'Y') || (y === 0 && x === 2)) {
+    return <SingleQubitGate name={'Y'} y={y} x={x}/>
   }
 }
 
