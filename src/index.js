@@ -18,8 +18,8 @@ Amplify.configure(config);
 
 const root = document.getElementById('root')
 
-observe((placedGates) => 
-  ReactDOM.render(<Circuit placedGates={placedGates} />, root)
+observe((placedGates, globalPhase) => 
+  ReactDOM.render(<Circuit placedGates={placedGates} globalPhase={globalPhase} />, root)
 )
 
 // If you want to start measuring performance in your app, pass a function
