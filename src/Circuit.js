@@ -4,7 +4,7 @@ import CircuitSquare from './CircuitSquare'
 import { DndProvider } from 'react-dnd-multi-backend'
 import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch'
 
-function renderSquare(i, placedGates, globalPhase) {
+function renderSquare(i, placedGates) {
   const y = Math.floor(i / 8)
   const x = i % 8
 
@@ -14,7 +14,7 @@ function renderSquare(i, placedGates, globalPhase) {
       style={{ width: '12.5%', height: '12.5%' }}
     >
       <CircuitSquare y={y} x={x}>
-        {renderGate(y, x, placedGates, globalPhase)}
+        {renderGate(y, x, placedGates)}
       </CircuitSquare>
     </div>
   )
