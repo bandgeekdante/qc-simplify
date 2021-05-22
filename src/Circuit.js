@@ -1,8 +1,8 @@
-import React from 'react'
-import SingleQubitGate from './SingleQubitGate'
-import CircuitSquare from './CircuitSquare'
-import { DndProvider } from 'react-dnd-multi-backend'
-import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch'
+import React from 'react';
+import SingleQubitGate from './SingleQubitGate';
+import CircuitSquare from './CircuitSquare';
+import { DndProvider } from 'react-dnd-multi-backend';
+import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
 
 function renderSquare(i, placedGates) {
   const y = Math.floor(i / 8)
@@ -28,6 +28,8 @@ function renderGate(y, x, placedGates) {
       return <SingleQubitGate name={'Z'} y={y} x={x}/>
     } else if (x === 2) {
       return <SingleQubitGate name={'Y'} y={y} x={x}/>
+    } else if (x === 3) {
+      return <SingleQubitGate name={'H'} y={y} x={x}/>
     }
   } else if (placedGates[y][x]) {
     return <SingleQubitGate name={placedGates[y][x]} y={y} x={x}/>

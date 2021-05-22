@@ -6,15 +6,7 @@ function emitChange() {
   observer(placedGates, globalPhase)
 }
 
-export function observe(o) {
-  if (observer) {
-    throw new Error('Multiple observers not implemented.')
-  }
-  observer = o
-  emitChange()
-}
-
-export function cancelOut(y, x) {
+function cancelOut(y, x) {
   if (x > 0 && placedGates[y][x-1] === placedGates[y][x]) {
     placedGates[y][x] = false
     placedGates[y][x-1] = false
@@ -22,6 +14,18 @@ export function cancelOut(y, x) {
     placedGates[y][x] = false
     placedGates[y][x+1] = false
   }
+}
+
+function Pauli(gate) {
+  return gate === 'X' || gate === 'Y' || gate === 'Z'
+}
+
+export function observe(o) {
+  if (observer) {
+    throw new Error('Multiple observers not implemented.')
+  }
+  observer = o
+  emitChange()
 }
 
 export function placeGate(item) {
@@ -33,7 +37,23 @@ export function placeGate(item) {
 export function slideGate(item, toY, toX) {
   if (placedGates[toY][toX] && item.y === toY && Math.abs(toX-item.x) === 1) {
     if (placedGates[toY][toX] !== item.gate) {
-      globalPhase *= -1
+      if (Pauli(placedGates[toY][toX]) && Pauli(item.gate)) {
+        globalPhase *= -1
+      } else {
+        // commuting with H
+        if (placedGates[toY][toX] === 'X') {
+          placedGates[toY][toX] = 'Z'
+        } else if (placedGates[toY][toX] === 'Z') {
+          placedGates[toY][toX] = 'X'
+        } else if (item.gate === 'X') {
+          item.gate = 'Z'
+        } else if (item.gate === 'Z') {
+          item.gate = 'X'
+        } else {
+          // commuting H and Y
+          globalPhase *= -1
+        }
+      }
     }
     placedGates[item.y][item.x] = placedGates[toY][toX]
     placedGates[toY][toX] = false
