@@ -1,6 +1,6 @@
 {
   "name": "qc-simplify",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^1.2.0",

@@ -35,7 +35,11 @@ export function placeGate(item) {
 }
 
 export function slideGate(item, toY, toX) {
+  if (item.y === toY && item.x === toX) {
+    return
+  }
   if (placedGates[toY][toX] && item.y === toY && Math.abs(toX-item.x) === 1) {
+    // TODO: Refactor into a "commuteGates" function
     if (placedGates[toY][toX] !== item.gate) {
       if (Pauli(placedGates[toY][toX]) && Pauli(item.gate)) {
         globalPhase *= -1
@@ -58,19 +62,20 @@ export function slideGate(item, toY, toX) {
     placedGates[item.y][item.x] = placedGates[toY][toX]
     placedGates[toY][toX] = false
     cancelOut(item.y, item.x)
-    item.x = toX
-    item.y = toY
-    emitChange()
-  } else if (canPlaceGate(toY, toX)) {
+  } else if (canPlaceGate(item, toY, toX)) {
     placedGates[item.y][item.x] = false
-    item.x = toX
-    item.y = toY
-    emitChange()
+  } else {
+    return
   }
+  item.x = toX
+  item.y = toY
+  placedGates[toY][toX] = item.gate
+  item.moved = true
+  emitChange()
 }
 
-export function canPlaceGate(toY, toX) {
+export function canPlaceGate(item, toY, toX) {
   return (
-    (toY >= 1 && toY <= 6) && !(placedGates[toY][toX])
+    (toY >= 1 && toY <= 6) && ((item.moved && item.y === toY && item.x === toX) || !(placedGates[toY][toX]))
   )
 }

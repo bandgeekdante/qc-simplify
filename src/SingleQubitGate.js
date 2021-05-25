@@ -1,27 +1,25 @@
-import React from 'react'
 import { ItemTypes } from './Constants'
 import { useDrag } from 'react-dnd'
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { placeGate } from './Logic'
 
 function SingleQubitGate({ name, y, x }) {
-  const [{ isDragging }, drag] = useDrag({
+  const [, drag, preview] = useDrag({
     item: {
       type: ItemTypes.SINGLEQUBITGATE,
       x: x,
       y: y,
-      gate: name
+      gate: name,
+      moved: false
     },
     end: (item) => placeGate(item),
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging()
-    })
-  })
+  });
+  preview(getEmptyImage(), { captureDraggingState: true });
   return (
     <>
       <div
         ref={drag}
         style={{
-          opacity: isDragging ? 0.5 : 1,
           fontSize: 25,
           fontWeight: 'bold',
           cursor: 'move',
