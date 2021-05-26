@@ -2,11 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Amplify from 'aws-amplify';
-import config from './aws-exports';
 import Circuit from './Circuit';
 import { observe } from './Logic';
-Amplify.configure(config);
 
 const root = document.getElementById('root')
 
