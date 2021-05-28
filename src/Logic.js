@@ -76,6 +76,7 @@ export function slideGate(item, toY, toX) {
 
 export function canPlaceGate(item, toY, toX) {
   return (
-    (toY >= 1 && toY <= 6) && ((item.moved && item.y === toY && item.x === toX) || !(placedGates[toY][toX]))
+    ((toY >= 1 && toY <= 6) && ((item.moved && item.y === toY && item.x === toX) || !(placedGates[toY][toX])))
+    || (toY === 0 && toX === 7)
   )
 }
