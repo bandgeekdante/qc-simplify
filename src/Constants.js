@@ -1,3 +1,4 @@
 export const ItemTypes = {
-  SINGLEQUBITGATE: 'singleQubitGate'
+  SINGLEQUBITGATE: 'singleQubitGate',
+  CONTROLLEDGATE: 'controlledGate'
 }
