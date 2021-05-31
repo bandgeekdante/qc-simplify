@@ -1,7 +1,7 @@
 import { ItemTypes } from './Constants'
 import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { placeGate } from './Logic'
+import { placeGate, getTips } from './Logic'
 
 function SingleQubitGate({ name, y, x }) {
   const [, drag, preview] = useDrag({
@@ -19,20 +19,10 @@ function SingleQubitGate({ name, y, x }) {
     <>
       <div
         ref={drag}
-        style={{
-          fontSize: 25,
-          fontWeight: 'bold',
-          cursor: 'move',
-          paddingTop: '10%',
-          paddingRight: '15%',
-          paddingBottom: '10%',
-          paddingLeft: '15%',
-          outline: '2px solid black',
-          background: 'white',
-          zIndex: 1
-        }}
+        className='single-qubit-gate'
       >
         {name}
+        {getTips() === 0 && <span className="tooltip-text">Drag a gate onto a wire to start building your circuit!</span>}
       </div>
     </>
   )

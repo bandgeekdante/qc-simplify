@@ -70,8 +70,8 @@ export default function Circuit({ placedGates, globalPhase }) {
     >
       <div
         style={{
-          width: 'min(100vw,100vh)',
-          height: 'min(100vw,100vh)',
+          width: '100vmin',
+          height: '100vmin',
           display: 'flex',
           flexWrap: 'wrap'
         }}

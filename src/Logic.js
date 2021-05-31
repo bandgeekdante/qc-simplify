@@ -1,5 +1,6 @@
 let placedGates = [...Array(8)].map(x=>Array(8).fill(false))
 let globalPhase = 1
+let tips = 0
 let observer = null
 
 function emitChange() {
@@ -29,8 +30,11 @@ export function observe(o) {
 }
 
 export function placeGate(item) {
-  placedGates[item.y][item.x] = item.gate
-  cancelOut(item.y, item.x)
+  if (item.y >= 1) {
+    placedGates[item.y][item.x] = item.gate
+    cancelOut(item.y, item.x)
+    tips = Math.max(1,tips)
+  }
   emitChange()
 }
 
@@ -79,4 +83,8 @@ export function canPlaceGate(item, toY, toX) {
     ((toY >= 1 && toY <= 6) && ((item.moved && item.y === toY && item.x === toX) || !(placedGates[toY][toX])))
     || ((item.y >= 1 || item.x === 7) && toY === 0 && toX === 7)
   )
+}
+
+export function getTips() {
+  return tips
 }

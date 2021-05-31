@@ -3,7 +3,7 @@ import { ItemTypes } from './Constants';
 import { canPlaceGate, slideGate} from './Logic';
 import Square from './Square';
 import { useDrop } from 'react-dnd';
-import './CircuitSquare.css';
+import './styles.css';
 
 function CircuitSquare({ y, x, children }) {
   const [{ isOver, canDrop}, drop] = useDrop({
@@ -26,8 +26,8 @@ function CircuitSquare({ y, x, children }) {
       }}
     >
       <Square y={y}>{children}</Square>
-      {!isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'yellow'}} />}
-      {isOver && canDrop && <div className='Overlay' style={{backgroundColor: 'green'}} />}
+      {!isOver && canDrop && <div className='overlay' style={{backgroundColor: 'yellow'}} />}
+      {isOver && canDrop && <div className='overlay' style={{backgroundColor: 'green'}} />}
     </div>
   )
 }

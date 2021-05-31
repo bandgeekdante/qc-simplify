@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  opacity: 0.5;
+  background-color: grey;
+}
+
+.single-qubit-gate {
+  position: relative;
+  font-size: 25px;
+  font-weight: bold;
+  cursor: move;
+  width: min(80%,60px);
+  height: min(80%,60px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: 2px solid black;
+  background: white;
+}
+
+.single-qubit-gate .tooltip-text {
+  display: none;
+  width: 300px;
+  top: 105%;
+  left: 105%;
+  background-color: black;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: normal;
+  position: absolute;
+  z-index: 1;
+}
+
+.single-qubit-gate:hover .tooltip-text {
+  display: flex;
+}
+
+.square {
+  background-color: white;
+  color: black;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wire:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  border-top: 1px solid black;
+  background: black;
+  width: 100%;
+  transform: translateY(-50%);
+}
