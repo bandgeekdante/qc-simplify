@@ -1,5 +1,5 @@
 let placedGates = [...Array(8)].map(x=>Array(8).fill(false))
-let globalPhase = 1
+let globalPhase = 0
 let tips = 0
 let observer = null
 
@@ -45,8 +45,9 @@ export function slideGate(item, toY, toX) {
   if (placedGates[toY][toX] && item.y === toY && Math.abs(toX-item.x) === 1) {
     // TODO: Refactor into a "commuteGates" function
     if (placedGates[toY][toX] !== item.gate) {
+      tips = Math.max(2,tips)
       if (Pauli(placedGates[toY][toX]) && Pauli(item.gate)) {
-        globalPhase *= -1
+        globalPhase += 1
       } else {
         // commuting with H
         if (placedGates[toY][toX] === 'X') {
@@ -59,7 +60,7 @@ export function slideGate(item, toY, toX) {
           item.gate = 'X'
         } else {
           // commuting H and Y
-          globalPhase *= -1
+          globalPhase += 1
         }
       }
     }

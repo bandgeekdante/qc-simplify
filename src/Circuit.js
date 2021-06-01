@@ -39,6 +39,19 @@ function renderGate(y, x, placedGates) {
   }
 }
 
+function displayGlobalPhase(globalPhase) {
+  globalPhase %= 2
+  if (globalPhase === 0) {
+    return "0"
+  } else if (globalPhase === 1) {
+    return "π"
+  } else if (globalPhase === 0.5) {
+    return "π/2"
+  } else if (globalPhase === 1.5) {
+    return "-π/2"
+  }
+}
+
 function renderGlobalPhase(globalPhase) {
   return (
     <div
@@ -53,7 +66,7 @@ function renderGlobalPhase(globalPhase) {
         fontWeight: 'bold',
       }}
     >
-      Global phase = {globalPhase}
+      Global phase = {displayGlobalPhase(globalPhase)}
     </div>
   )
 }

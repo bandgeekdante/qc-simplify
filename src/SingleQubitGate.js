@@ -23,6 +23,7 @@ function SingleQubitGate({ name, y, x }) {
       >
         {name}
         {getTips() === 0 && <span className="tooltip-text">Drag a gate onto a wire to start building your circuit!</span>}
+        {getTips() === 1 && y >=1 && <span className="tooltip-text">Slide gates past each other to apply commutation rules!</span>}
       </div>
     </>
   )
