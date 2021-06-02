@@ -3,14 +3,10 @@ function Trash() {
     <>
       <div
         style={{
-          fontSize: 50,
+          fontSize: 45,
           fontWeight: 'bold',
-          paddingTop: '10%',
-          paddingRight: '15%',
-          paddingBottom: '10%',
-          paddingLeft: '15%',
           background: 'white',
-          zIndex: 1
+          userSelect: 'none'
         }}
       >
         🗑
