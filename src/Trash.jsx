@@ -3,16 +3,17 @@ function Trash() {
     <>
       <div
         style={{
-          fontSize: 45,
+          fontSize: '40px',
           fontWeight: 'bold',
           background: 'white',
           userSelect: 'none'
         }}
       >
+        {/* TODO: Replace Unicode with an actual icon */}
         🗑
       </div>
     </>
-  )
+  );
 }
 
-export default Trash
+export default Trash;

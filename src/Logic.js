@@ -8,11 +8,48 @@ function emitChange() {
 }
 
 function cancelOne(y, x) {
+  if (x > 0 && x < 7) {
+    cancelThree(y, x);
+  }
   if (x > 0) {
     cancelTwo(y, x, x-1);
   }
   if (x < 7) {
     cancelTwo(y, x, x+1);
+  }
+}
+
+function cancelThree(y, x) {
+  if (placedGates[y][x-1] === placedGates[y][x+1]) {
+    if (placedGates[y][x-1] === placedGates[y][x]) {
+      // XXX = X, YYY = Y, ZZZ = Z, HHH = H
+      placedGates[y][x-1] = false;
+      placedGates[y][x+1] = false;
+    } else if (placedGates[y][x-1] === 'H') {
+      placedGates[y][x-1] = false;
+      placedGates[y][x+1] = false;
+      if (placedGates[y][x] === 'X') {
+        // HXH = Z
+        placedGates[y][x] = 'Z';
+      } else if (placedGates[y][x] === 'Y') {
+        // HYH = -Y
+        globalPhase += 1;
+      } else if (placedGates[y][x] === 'Z') {
+        // HZH = X
+        placedGates[y][x] = 'X';
+      }
+    } else if (placedGates[y][x-1] === 'Y' && placedGates[y][x] === 'H') {
+      // YHY = -H
+      placedGates[y][x-1] = false;
+      placedGates[y][x+1] = false;
+      globalPhase += 1;
+    }
+  } else if (placedGates[y][x] === 'H' && (
+              (placedGates[y][x-1] === 'X' && placedGates[y][x+1] === 'Z')
+           || (placedGates[y][x-1] === 'Z' && placedGates[y][x+1] === 'X'))) {
+    // XHZ = ZHX = H
+    placedGates[y][x-1] = false;
+    placedGates[y][x+1] = false;
   }
 }
 
@@ -75,6 +112,14 @@ export function placeGate(item) {
   if (item.y >= 1) {
     placedGates[item.y][item.x] = item.gate;
     cancelOne(item.y, item.x);
+    for (let diff = 1; diff <= Math.max(item.x, 7-item.x); diff++) {
+      if (item.x - diff >= 0) {
+        cancelOne(item.y, item.x - diff);
+      }
+      if (item.x + diff <= 7) {
+        cancelOne(item.y, item.x + diff);
+      }
+    }
     tips = Math.max(1,tips);
   }
   emitChange();
