@@ -6,8 +6,8 @@ import { DndProvider } from 'react-dnd-multi-backend';
 import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
 
 function renderSquare(i, placedGates) {
-  const y = Math.floor(i / 8)
-  const x = i % 8
+  const y = Math.floor(i / 8);
+  const x = i % 8;
 
   return (
     <div
@@ -24,31 +24,31 @@ function renderSquare(i, placedGates) {
 function renderGate(y, x, placedGates) {
   if (y === 0) {
     if (x === 0) {
-      return <SingleQubitGate name={'X'} y={y} x={x}/>
+      return <SingleQubitGate name={'X'} y={y} x={x}/>;
     } else if (x === 1) {
-      return <SingleQubitGate name={'Z'} y={y} x={x}/>
+      return <SingleQubitGate name={'Z'} y={y} x={x}/>;
     } else if (x === 2) {
-      return <SingleQubitGate name={'Y'} y={y} x={x}/>
+      return <SingleQubitGate name={'Y'} y={y} x={x}/>;
     } else if (x === 3) {
-      return <SingleQubitGate name={'H'} y={y} x={x}/>
-    } else if (x === 7) {
-      return <Trash/>
+      return <SingleQubitGate name={'H'} y={y} x={x}/>;
+    } else if (x === 7 && placedGates.some(a => a.some(Boolean))) {
+      return <Trash/>;
     }
   } else if (placedGates[y][x]) {
-    return <SingleQubitGate name={placedGates[y][x]} y={y} x={x}/>
+    return <SingleQubitGate name={placedGates[y][x]} y={y} x={x}/>;
   }
 }
 
 function displayGlobalPhase(globalPhase) {
-  globalPhase %= 2
+  globalPhase %= 2;
   if (globalPhase === 0) {
-    return "0"
+    return "0";
   } else if (globalPhase === 1) {
-    return "π"
+    return "π";
   } else if (globalPhase === 0.5) {
-    return "π/2"
+    return "π/2";
   } else if (globalPhase === 1.5) {
-    return "-π/2"
+    return "-π/2";
   }
 }
 
@@ -72,9 +72,9 @@ function renderGlobalPhase(globalPhase) {
 }
 
 export default function Circuit({ placedGates, globalPhase }) {
-  const squares = []
+  const squares = [];
   for (let i = 0; i < 56; i++) {
-    squares.push(renderSquare(i, placedGates))
+    squares.push(renderSquare(i, placedGates));
   }
   squares.push(renderGlobalPhase(globalPhase))
   return (

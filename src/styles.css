@@ -38,16 +38,15 @@ code {
   background: white;
 }
 
-.single-qubit-gate .tooltip-text {
+.tooltip-text {
   display: none;
-  width: 300px;
   top: 105%;
-  left: 105%;
+  white-space: nowrap;
   background-color: black;
   color: #fff;
   align-items: center;
   justify-content: center;
-  padding: 5px 0;
+  padding: 5px;
   border-radius: 6px;
   font-size: 12px;
   font-weight: normal;
@@ -56,6 +55,27 @@ code {
 }
 
 .single-qubit-gate:hover .tooltip-text {
+  display: flex;
+}
+
+.trash {
+  position: relative;
+  font-size: 40px;
+  font-weight: bold;
+  background: white;
+  user-select: none;
+  cursor: pointer;
+}
+
+.left .tooltip-text {
+  left: 105%;
+}
+
+.right .tooltip-text {
+  right: 105%;
+}
+
+.trash:hover .tooltip-text {
   display: flex;
 }
 

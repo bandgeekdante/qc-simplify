@@ -8,13 +8,13 @@ function emitChange() {
 }
 
 function cancelOne(y, x) {
-  if (x > 0 && x < 7) {
+  if (x > 0 && x < 7 && placedGates[y][x] && placedGates[y][x-1] && placedGates[y][x+1]) {
     cancelThree(y, x);
   }
-  if (x > 0) {
+  if (x > 0 && placedGates[y][x] && placedGates[y][x-1]) {
     cancelTwo(y, x, x-1);
   }
-  if (x < 7) {
+  if (x < 7 && placedGates[y][x] && placedGates[y][x+1]) {
     cancelTwo(y, x, x+1);
   }
 }
@@ -120,7 +120,9 @@ export function placeGate(item) {
         cancelOne(item.y, item.x + diff);
       }
     }
-    tips = Math.max(1,tips);
+    tips |= 1;
+  } else if (item.x === 7) {
+    tips |= 4;
   }
   emitChange();
 }
@@ -131,7 +133,7 @@ export function slideGate(item, toY, toX) {
   }
   if (placedGates[toY][toX] && item.y === toY && Math.abs(toX-item.x) === 1) {
     if (placedGates[toY][toX] !== item.gate) {
-      tips = Math.max(2,tips);
+      tips |= 2;
       if (PauliNumber(placedGates[toY][toX]) && PauliNumber(item.gate)) {
         globalPhase += 1;
       } else {
@@ -174,4 +176,11 @@ export function canPlaceGate(item, toY, toX) {
 
 export function getTips() {
   return tips;
+}
+
+export function clearCircuit() {
+  placedGates = [...Array(8)].map(x=>Array(8).fill(false));
+  globalPhase = 0;
+  tips |= 8;
+  emitChange();
 }

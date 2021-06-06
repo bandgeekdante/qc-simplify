@@ -19,11 +19,11 @@ function SingleQubitGate({ name, y, x }) {
     <>
       <div
         ref={drag}
-        className='single-qubit-gate'
+        className={`single-qubit-gate ${x <= 3 ? 'left' : 'right'}`}
       >
         {name}
-        {getTips() === 0 && <span className="tooltip-text">Drag a gate onto a wire to start building your circuit!</span>}
-        {getTips() === 1 && y >=1 && <span className="tooltip-text">Slide gates past each other to apply commutation rules!</span>}
+        {!(getTips() & 1) && <span className="tooltip-text">Drag a gate onto a wire to start building your circuit!</span>}
+        {!(getTips() & 2) && y >=1 && <span className="tooltip-text">Slide gates past each other to apply commutation rules!</span>}
       </div>
     </>
   )
