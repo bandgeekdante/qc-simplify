@@ -7,7 +7,7 @@ import './styles.css';
 
 function CircuitSquare({ y, x, children }) {
   const [{ isOver, canDrop}, drop] = useDrop({
-    accept: ItemTypes.SINGLEQUBITGATE,
+    accept: [ItemTypes.GATE],
     canDrop: (item) => canPlaceGate(item, y, x),
     hover: (item) => slideGate(item, y, x),
     collect: (monitor) => ({

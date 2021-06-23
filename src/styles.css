@@ -38,6 +38,14 @@ code {
   background: white;
 }
 
+.control {
+  position: relative;
+  font-size: 25px;
+  /* font-weight: bold; */
+  cursor: move;
+  z-index: 1;
+}
+
 .tooltip-text {
   display: none;
   top: 105%;
@@ -54,7 +62,7 @@ code {
   z-index: 1;
 }
 
-.single-qubit-gate:hover .tooltip-text {
+.single-qubit-gate:hover .tooltip-text, .control:hover .tooltip-text {
   display: flex;
 }
 
@@ -94,8 +102,8 @@ code {
   position: absolute;
   top: 50%;
   left: 0;
-  border-top: 1px solid black;
+  border-top: 2px solid black;
   background: black;
   width: 100%;
-  transform: translateY(-50%);
+  transform: translateY(50%);
 }

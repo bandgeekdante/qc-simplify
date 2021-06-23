@@ -6,7 +6,7 @@ import { placeGate, getTips } from './Logic'
 function SingleQubitGate({ name, y, x }) {
   const [, drag, preview] = useDrag({
     item: {
-      type: ItemTypes.SINGLEQUBITGATE,
+      type: ItemTypes.GATE,
       x: x,
       y: y,
       gate: name,
