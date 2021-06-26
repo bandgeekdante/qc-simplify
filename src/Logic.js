@@ -38,7 +38,7 @@ function cancelThree(y, x) {
       // XXX = X, YYY = Y, ZZZ = Z, HHH = H
       placedGates[y][x-1] = false;
       placedGates[y][x+1] = false;
-    } else if (placedGates[y][x-1] === 'H') {
+    } else if (placedGates[y][x-1] === 'H' && PauliNumber(placedGates[y][x])) {
       placedGates[y][x-1] = false;
       placedGates[y][x+1] = false;
       if (placedGates[y][x] === 'X') {
@@ -81,10 +81,10 @@ function cancelTwo(first, second) {
   if (p1 && p2) {
     if (p2-p1 === 1 || p2-p1 === -2) {
       first = PauliGate((p1 + 2) % 3);
-      incGlobalPhase(0.5);
+      incGlobalPhase(1.5);
     } else {
       first = PauliGate((p1 + 1) % 3);
-      incGlobalPhase(1.5);
+      incGlobalPhase(0.5);
     }
     second = false;
     return [first, second];
@@ -237,12 +237,16 @@ function commuteGate(item, toY, toX) {
 }
 
 function slideControl(item, toY, toX) {
+  // if (item.gate !== placedGates[item.y][item.x]) {
+  //   // do nothing if recursively called after already moving the gate
+  //   return true;
+  // }
   let targetGate = placedGates[toY][toX];
   let partnerY = partners[item.y][item.x];
-  let partnerGate = item.gate === 'C' ? '+' : 'C';
   if (!canCommuteControl(targetGate, item, toY, toX, partnerY)) {
     return false;
   }
+  let partnerGate = item.gate === 'C' ? '+' : 'C';
   let targetPartner = false;
   if (partnerY !== false) {
     // get partner info
@@ -275,7 +279,8 @@ function slideControl(item, toY, toX) {
     }
     if (Math.abs(toX-item.x) === 1) {
       if ((isControl(targetGate) && !slideControl({gate: targetGate, y: toY, x: toX}, item.y, item.x)) ||
-       (isControl(targetPartner) && !slideControl({gate: targetPartner, y: partnerY, x: toX}, partnerY, item.x))) {
+         (!isControl(targetGate) && isControl(targetPartner) &&
+          !slideControl({gate: targetPartner, y: partnerY, x: toX}, partnerY, item.x))) {
           // restore the state
           placedGates[partnerY][toX] = targetPartner;
           placedGates[toY][toX] = targetGate;
@@ -286,11 +291,19 @@ function slideControl(item, toY, toX) {
           return false;
         }
       }
-      if (!isControl(targetPartner)) {
+      if (PauliNumber(targetPartner) && PauliNumber(targetGate)) {
         commuteHalfControl(partnerGate, targetPartner, partnerY, item.y, item.x);
-      }
-      if (!isControl(targetGate)) {
         commuteHalfControl(item.gate, targetGate, item.y, partnerY, item.x);
+      } else {
+        // slide single-qubit gates
+        if (!isControl(targetGate)) {
+          placedGates[toY][item.x] = targetGate;
+          cancelOne(toY,item.x);
+        }
+        if (!isControl(targetPartner)) {
+          placedGates[partnerY][item.x] = targetPartner;
+          cancelOne(partnerY,item.x);
+        }
       }
     // place gate and partner at new locations
     placedGates[toY][toX] = item.gate;
@@ -308,15 +321,25 @@ function slideControl(item, toY, toX) {
 function canCommuteControl(targetGate, item, toY, toX, partnerY) {
   if (targetGate && toY >= 1) {
     // check if we should commute the control
+    let targetGate = placedGates[partnerY][toX];
     if (item.y === toY && Math.abs(toX-item.x) === 1) {
+      if (targetGate === 'H' && targetGate === 'H') {
+        // both H swap direction of control
+        item.gate = item.gate === 'C' ? '+' : 'C';
+        return true;
+      }
       if (!PauliNumber(targetGate) && targetGate !== item.gate) {
         // cannot slide horizontally across H or opposite control
         return false;
       }
       if (isControl(targetGate)) {
-        let partnerCommuting = placedGates[partnerY][toX];
+        let partnerGate = placedGates[partnerY][item.x];
+        let oppositePartner = placedGates[partners[toY][toX]][toX];
         let oppositePartnerCommuting = placedGates[partners[toY][toX]][item.x];
-        if (partnerCommuting !== oppositePartnerCommuting) {
+        let partnerMatches = !targetGate || controlToPauli(partnerGate) === controlToPauli(targetGate);
+        let oppositeMatches = !oppositePartnerCommuting || controlToPauli(oppositePartner) === controlToPauli(oppositePartnerCommuting);
+        if (partnerMatches !== oppositeMatches) {
+          // either they both match (so no extra gates get created) or neither match (so extra gates cancel out)
           return false;
         }
       }
@@ -326,6 +349,17 @@ function canCommuteControl(targetGate, item, toY, toX, partnerY) {
     }
   }
   return true;
+}
+
+// convert a control gate to its corresponding Pauli gate
+function controlToPauli(gate) {
+  if (gate === 'C') {
+    return 'Z';
+  } else if (gate === '+') {
+    return 'X';
+  } else {
+    return gate;
+  }
 }
 
 function commuteHalfControl(controlGate, commuteGate, controlY, partnerY, x) {
