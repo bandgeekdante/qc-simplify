@@ -16,7 +16,7 @@ function renderSquare(i, placedGates) {
       key={i}
       style={{ width: '12.5%', height: '12.5%' }}
     >
-      <CircuitSquare y={y} x={x}>
+      <CircuitSquare y={y} x={x} gate={placedGates[y][x]}>
         {renderGate(y, x, placedGates)}
       </CircuitSquare>
     </div>

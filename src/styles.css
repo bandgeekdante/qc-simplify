@@ -41,7 +41,6 @@ code {
 .control {
   position: relative;
   font-size: 25px;
-  /* font-weight: bold; */
   cursor: move;
   z-index: 1;
 }
@@ -102,8 +101,27 @@ code {
   position: absolute;
   top: 50%;
   left: 0;
-  border-top: 2px solid black;
-  background: black;
+  border-top: 1px solid black;
   width: 100%;
-  transform: translateY(50%);
+  transform: translateY(200%);
+}
+
+.top-wire:before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  border-left: 1px solid black;
+  height: 50%;
+  transform: translateX(-50%);
+}
+
+.bottom-wire:before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-left: 1px solid black;
+  height: 50%;
+  transform: translateX(-50%);
 }
