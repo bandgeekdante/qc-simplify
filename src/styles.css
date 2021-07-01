@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 code {
@@ -38,6 +39,14 @@ code {
   background: white;
 }
 
+.control {
+  font-family: Helvetica, 'DejaVu Sans', 'Arial Unicode MS', 'Lucida Sans Unicode', sans-serif;
+  position: relative;
+  font-size: 25px;
+  cursor: move;
+  z-index: 1;
+}
+
 .tooltip-text {
   display: none;
   top: 105%;
@@ -54,7 +63,7 @@ code {
   z-index: 1;
 }
 
-.single-qubit-gate:hover .tooltip-text {
+.single-qubit-gate:hover .tooltip-text, .control:hover .tooltip-text {
   display: flex;
 }
 
@@ -95,7 +104,26 @@ code {
   top: 50%;
   left: 0;
   border-top: 1px solid black;
-  background: black;
   width: 100%;
-  transform: translateY(-50%);
+  transform: translateY(200%);
+}
+
+.top-wire:before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  border-left: 1px solid black;
+  height: 50%;
+  transform: translateX(-50%);
+}
+
+.bottom-wire:before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-left: 1px solid black;
+  height: 50%;
+  transform: translateX(-50%);
 }
