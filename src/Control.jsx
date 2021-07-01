@@ -23,6 +23,7 @@ function Control({ y, x }) {
       >
         ⬤
         {!(getTips() & 16) && <span className="tooltip-text">Drag this control to make a CNOT gate!</span>}
+        {!(getTips() & 2) && y >=1 && <span className="tooltip-text">Slide gates past each other to apply commutation rules!</span>}
       </div>
     </>
   )

@@ -1,7 +1,7 @@
 import { ItemTypes } from './Constants'
 import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { placeGate } from './Logic'
+import { placeGate, getTips } from './Logic'
 
 function ControlledGate({ name, y, x }) {
   const [, drag, preview] = useDrag({
@@ -22,6 +22,7 @@ function ControlledGate({ name, y, x }) {
         className={`control ${x <= 3 ? 'left' : 'right'}`}
       >
         ⊕
+        {!(getTips() & 2) && y >=1 && <span className="tooltip-text">Slide gates past each other to apply commutation rules!</span>}
       </div>
     </>
   )

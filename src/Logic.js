@@ -149,7 +149,6 @@ export function observe(o) {
 
 export function placeGate(item) {
   if (item.y >= 1) {
-    // placedGates[item.y][item.x] = item.gate;
     cancelOne(item.y, item.x);
     for (let diff = 1; diff <= Math.max(item.x, maxX-item.x); diff++) {
       if (item.x - diff >= 0) {
@@ -215,8 +214,7 @@ function commuteGate(item, toY, toX) {
     tips |= 2;
      if (PauliNumber(toGate) && PauliNumber(item.gate)) {
       incGlobalPhase(1);
-    } else {
-      // commuting with H
+    } else if (toGate === 'H' || item.gate === 'H') {
       if (toGate === 'X') {
         placedGates[toY][toX] = 'Z';
       } else if (toGate === 'Z') {
@@ -225,8 +223,7 @@ function commuteGate(item, toY, toX) {
         item.gate = 'Z';
       } else if (item.gate === 'Z') {
         item.gate = 'X';
-      } else {
-        // commuting H and Y
+      } else if (toGate === 'Y' || item.gate === 'Y') {
         incGlobalPhase(1);
       }
     }
@@ -274,9 +271,6 @@ function slideControl(item, toY, toX) {
     // clear commuting gates
     placedGates[toY][toX] = false;
     placedGates[partnerToY][toX] = false;
-    if (targetGate || targetPartner) {
-      tips |= 2;
-    }
     if (Math.abs(toX-item.x) === 1) {
       if ((isControl(targetGate) && !slideControl({gate: targetGate, y: toY, x: toX}, item.y, item.x)) ||
          (!isControl(targetGate) && isControl(targetPartner) &&
@@ -289,6 +283,9 @@ function slideControl(item, toY, toX) {
           placedGates[partnerY][item.x] = partnerGate;
           placedGates[item.y][item.x] = item.gate;
           return false;
+        }
+        if (targetGate || targetPartner) {
+          tips |= 2;
         }
       }
       if ((!targetGate || PauliNumber(targetGate)) && (!targetPartner || PauliNumber(targetPartner))) {
@@ -382,7 +379,12 @@ function availableSquare(toY, toX) {
 
 export function squareClasses(y, x) {
   if (y < 1 || y > maxY) {
-    return -4; // no wire
+    return -8; // no wire
+  }
+  for (let i = 1; i < y; i++) {
+    if (partners[i][x] && partners[i][x] > y) {
+      return 3; // vertical wire
+    }
   }
   if (isControl(placedGates[y][x])) {
     let partnerY = partners[y][x];

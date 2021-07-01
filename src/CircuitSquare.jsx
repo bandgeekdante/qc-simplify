@@ -7,7 +7,7 @@ import './styles.css';
 function CircuitSquare({ y, x, gate, children }) {
   const [{ isOver, canDrop}, drop] = useDrop({
     accept: [ItemTypes.GATE],
-    canDrop: (_, monitor) => !!monitor.isOver() && ((y >= 1 && monitor.getItem().gate === gate) || (y === 0 && x === 7)),
+    canDrop: (_, monitor) => !!monitor.isOver() && ((y === 0 && x === 7) || (y >= 1 && monitor.getItem().x === x && monitor.getItem().y === y)),
     hover: (item) => slideGate(item, y, x),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -15,7 +15,6 @@ function CircuitSquare({ y, x, gate, children }) {
     }),
   })
   let classes = squareClasses(y, x);
-  // let goodDrag = isOver && ((y >= 1 && getItem.gate === gate) || (y === 0 && x === 7));
   return (
     <div
       ref={drop}
@@ -26,12 +25,11 @@ function CircuitSquare({ y, x, gate, children }) {
       }}
     >
       {(classes >= 0) && <div className="wire" />}
-      {!!(classes & 1) && <div className="bottom-wire" />}
-      {!!(classes & 2) && <div className="top-wire" />}
       <div className={"square"}>
         {children}
       </div>
-      {console.log(canDrop)}
+      {!!(classes & 1) && <div className="bottom-wire" />}
+      {!!(classes & 2) && <div className="top-wire" />}
       {isOver && canDrop && <div className="overlay" style={{backgroundColor: 'green'}} />}
       {isOver && y >= 1 && !canDrop && <div className="overlay" style={{backgroundColor: 'red'}} />}
     </div>
