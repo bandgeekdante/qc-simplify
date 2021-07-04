@@ -181,7 +181,9 @@ export function slideGate(item, toY, toX) {
     return;
   } else if (isControl(item.gate)) {
     if (toY >= 1 || toX === maxX) {
-      slideControl(item, toY, toX);
+      if (slideControl(item, toY, toX)) {
+        emitChange();
+      }
     }
     return;
   } else if (toGate && ((item.y === toY && Math.abs(toX-item.x) === 1) || item.gate === toGate)) {
@@ -248,7 +250,7 @@ function slideControl(item, toY, toX) {
       // swap target and partner Y values
       partnerToY = item.y;
     }
-    let partnerItem = {gate: placedGates[partnerY][item.x], y: partnerY, x: item.x};
+    let partnerItem = {gate: partnerGate, y: partnerY, x: item.x};
     targetPartner = placedGates[partnerToY][toX];
     if (item.x !== toX && !canCommuteControl(targetPartner, partnerItem, partnerToY, toX, item.y)) {
       return false;
@@ -269,39 +271,48 @@ function slideControl(item, toY, toX) {
   }
   if (toY >= 1) {
     // clear commuting gates
-    placedGates[toY][toX] = false;
-    placedGates[partnerToY][toX] = false;
+    if (!isControl(targetGate)) {
+      placedGates[toY][toX] = false;
+    }
+    if (!isControl(targetPartner)) {
+      placedGates[partnerToY][toX] = false;
+    }
     if (Math.abs(toX-item.x) === 1) {
-      if ((isControl(targetGate) && !slideControl({gate: targetGate, y: toY, x: toX}, item.y, item.x)) ||
-         (!isControl(targetGate) && isControl(targetPartner) &&
-          !slideControl({gate: targetPartner, y: partnerY, x: toX}, partnerToY, item.x))) {
-          // restore the state
-          placedGates[partnerToY][toX] = targetPartner;
-          placedGates[toY][toX] = targetGate;
-          partners[partnerY][item.x] = item.y;
-          partners[item.y][item.x] = partnerY;
-          placedGates[partnerY][item.x] = partnerGate;
-          placedGates[item.y][item.x] = item.gate;
-          return false;
+      let didSlideGate = !isControl(targetGate) || slideControl({gate: targetGate, y: toY, x: toX}, item.y, item.x);
+      let didSlidePartner = !didSlideGate || !isControl(targetPartner) || partners[item.y][item.x] === partnerY ||
+                            slideControl({gate: targetPartner, y: partnerY, x: toX}, partnerToY, item.x);
+      if (!didSlideGate || !didSlidePartner) {
+        // restore the state
+        if (isControl(targetGate) && didSlideGate) {
+          // slide the target gate back
+          slideControl({gate: targetGate, y: toY, x: item.x}, item.y, toX);
         }
-        if (targetGate || targetPartner) {
-          tips |= 2;
-        }
+        placedGates[partnerToY][toX] = targetPartner;
+        placedGates[toY][toX] = targetGate;
+        partners[partnerY][item.x] = item.y;
+        partners[item.y][item.x] = partnerY;
+        placedGates[partnerY][item.x] = partnerGate;
+        placedGates[item.y][item.x] = item.gate;
+        return false;
       }
-      if ((!targetGate || PauliNumber(targetGate)) && (!targetPartner || PauliNumber(targetPartner))) {
-        commuteHalfControl(item.gate, targetGate, item.y, partnerY, item.x);
-        commuteHalfControl(partnerGate, targetPartner, partnerY, item.y, item.x);
-      } else {
-        // slide single-qubit gates
-        if (targetGate && !isControl(targetGate)) {
-          placedGates[toY][item.x] = targetGate;
-          cancelOne(toY,item.x);
-        }
-        if (targetPartner && !isControl(targetPartner)) {
-          placedGates[partnerToY][item.x] = targetPartner;
-          cancelOne(partnerToY,item.x);
-        }
+      if (targetGate || targetPartner) {
+        tips |= 2;
       }
+    }
+    if ((!targetGate || PauliNumber(targetGate)) && (!targetPartner || PauliNumber(targetPartner))) {
+      commuteHalfControl(item.gate, targetGate, item.y, partnerY, item.x);
+      commuteHalfControl(partnerGate, targetPartner, partnerY, item.y, item.x);
+    } else {
+      // slide single-qubit gates
+      if (targetGate && !isControl(targetGate)) {
+        placedGates[toY][item.x] = targetGate;
+        cancelOne(toY,item.x);
+      }
+      if (targetPartner && !isControl(targetPartner)) {
+        placedGates[partnerToY][item.x] = targetPartner;
+        cancelOne(partnerToY,item.x);
+      }
+    }
     // place gate and partner at new locations
     placedGates[toY][toX] = item.gate;
     placedGates[partnerToY][toX] = partnerGate;
@@ -311,7 +322,6 @@ function slideControl(item, toY, toX) {
   item.x = toX;
   item.y = toY;
   item.moved = true;
-  emitChange();
   return true;
 }
 

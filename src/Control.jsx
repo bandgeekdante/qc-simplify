@@ -10,7 +10,6 @@ function Control({ y, x }) {
       x: x,
       y: y,
       gate: 'C',
-      moved: false
     },
     end: (item) => placeControl(item),
   });

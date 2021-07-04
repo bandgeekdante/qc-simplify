@@ -10,7 +10,6 @@ function SingleQubitGate({ name, y, x }) {
       x: x,
       y: y,
       gate: name,
-      moved: false
     },
     end: (item) => placeGate(item),
   });

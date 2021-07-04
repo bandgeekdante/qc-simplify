@@ -4,7 +4,7 @@ import { slideGate, squareClasses} from './Logic';
 import { useDrop } from 'react-dnd';
 import './styles.css';
 
-function CircuitSquare({ y, x, gate, children }) {
+function CircuitSquare({ y, x, children }) {
   const [{ isOver, canDrop}, drop] = useDrop({
     accept: [ItemTypes.GATE],
     canDrop: (_, monitor) => !!monitor.isOver() && ((y === 0 && x === 7) || (y >= 1 && monitor.getItem().x === x && monitor.getItem().y === y)),
