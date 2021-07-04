@@ -1,11 +1,11 @@
 import React from 'react';
 import { ItemTypes } from './Constants';
-import { slideGate, squareClasses} from './Logic';
+import { slideGate, squareClasses } from './Logic';
 import { useDrop } from 'react-dnd';
 import './styles.css';
 
 function CircuitSquare({ y, x, children }) {
-  const [{ isOver, canDrop}, drop] = useDrop({
+  const [{ isOver, canDrop }, drop] = useDrop({
     accept: [ItemTypes.GATE],
     canDrop: (_, monitor) => !!monitor.isOver() && ((y === 0 && x === 7) || (y >= 1 && monitor.getItem().x === x && monitor.getItem().y === y)),
     hover: (item) => slideGate(item, y, x),
@@ -13,7 +13,7 @@ function CircuitSquare({ y, x, children }) {
       isOver: !!monitor.isOver(),
       canDrop: monitor.canDrop()
     }),
-  })
+  });
   let classes = squareClasses(y, x);
   return (
     <div

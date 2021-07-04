@@ -1,7 +1,7 @@
 import { ItemTypes } from './Constants'
 import { useDrag } from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import { placeControl, getTips } from './Logic'
+import { placeGate, getTips } from './Logic'
 
 function Control({ y, x }) {
   const [, drag, preview] = useDrag({
@@ -11,7 +11,7 @@ function Control({ y, x }) {
       y: y,
       gate: 'C',
     },
-    end: (item) => placeControl(item),
+    end: (item) => placeGate(item),
   });
   preview(getEmptyImage(), { captureDraggingState: true });
   return (

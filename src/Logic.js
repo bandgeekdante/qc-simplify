@@ -15,7 +15,7 @@ function cancelOne(y, x) {
     cancelThree(y, x);
   }
   if (x > 0 && placedGates[y][x] && placedGates[y][x-1]) {
-    setTimeout(function(){ cancelTwoControls(y, x, x-1); }, 1000);
+    cancelTwoControls(y, x, x-1);
     let gates = cancelTwo(placedGates[y][x-1], placedGates[y][x]);
     if (!gates[1]) {
       placedGates[y][x-1] = false;
@@ -23,7 +23,7 @@ function cancelOne(y, x) {
     }
   }
   if (x < maxX && placedGates[y][x] && placedGates[y][x+1]) {
-    setTimeout(function(){ cancelTwoControls(y, x, x+1); }, 1000);
+    cancelTwoControls(y, x, x+1);
     let gates = cancelTwo(placedGates[y][x], placedGates[y][x+1]);
     if (!gates[1]) {
       placedGates[y][x+1] = false;
@@ -104,6 +104,7 @@ function cancelTwoControls(y, x1, x2) {
     partners[y][x2] = false;
     partners[partnerY][x1] = false;
     partners[partnerY][x2] = false;
+
     emitChange();
   }
 }
@@ -158,18 +159,15 @@ export function placeGate(item) {
         cancelOne(item.y, item.x + diff);
       }
     }
-    tips |= 1;
+    if (!isControl(item.gate)) {
+      tips |= 1;
+    } else {
+      tips |= 16;
+    }
   } else if (item.x === maxX) {
     tips |= 4;
   }
   emitChange();
-}
-
-export function placeControl(item) {
-  if (item.y >= 1) {
-    tips |= 16;
-    placeGate(item);
-  }
 }
 
 export function slideGate(item, toY, toX) {
@@ -190,12 +188,14 @@ export function slideGate(item, toY, toX) {
     if (isControl(toGate)) {
       if (slideControl({x: toX, y: toY, gate: toGate}, item.y, item.x)) {
         item.gate = placedGates[toY][toX];
+        placedGates[toY][toX] = false;
       } else {
         return;
       }
     } else {
-      commuteGate(item, toY, toX)
+      commuteGate(item, toY, toX);
     }
+    cancelOne(item.y, item.x);
   } else if (availableSquare(toY, toX)) {
     placedGates[item.y][item.x] = false;
   } else {
@@ -232,7 +232,6 @@ function commuteGate(item, toY, toX) {
   }
   placedGates[item.y][item.x] = placedGates[toY][toX];
   placedGates[toY][toX] = false;
-  cancelOne(item.y, item.x);
 }
 
 function slideControl(item, toY, toX) {
@@ -245,12 +244,19 @@ function slideControl(item, toY, toX) {
     if (!canCommuteControl(targetGate, item, toY, toX, partnerY)) {
       return false;
     }
+    let partnerItem = {gate: partnerGate, y: partnerY, x: item.x};
     // find target location for the partner
     if (partnerY === toY) {
-      // swap target and partner Y values
-      partnerToY = item.y;
+      // push partner in same direction if possible
+      if (toY > item.y && toY < maxY && !placedGates[toY+1][toX]) {
+        partnerToY = toY+1;
+      } else if (toY < item.y && toY > 1 && !placedGates[toY-1][toX]) {
+        partnerToY = toY-1;
+      } else {
+        // otherwise swap target with partner
+        partnerToY = item.y;
+      }
     }
-    let partnerItem = {gate: partnerGate, y: partnerY, x: item.x};
     targetPartner = placedGates[partnerToY][toX];
     if (item.x !== toX && !canCommuteControl(targetPartner, partnerItem, partnerToY, toX, item.y)) {
       return false;
