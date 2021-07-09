@@ -1,7 +1,6 @@
 import React from 'react';
 import SingleQubitGate from './SingleQubitGate';
 import Control from './Control'
-import ControlledGate from './ControlledGate'
 import CircuitSquare from './CircuitSquare';
 import Trash from './Trash'
 import { DndProvider } from 'react-dnd-multi-backend';
@@ -38,10 +37,8 @@ function renderGate(y, x, placedGates) {
     } else if (x === 7 && placedGates.some(a => a.some(Boolean))) {
       return <Trash/>;
     }
-  } else if (placedGates[y][x] === 'C') {
-    return <Control y={y} x={x}/>;
-  } else if (placedGates[y][x] === '+') {
-    return <ControlledGate name={'+'} y={y} x={x}/>;
+  } else if (placedGates[y][x] === 'C' || placedGates[y][x] === '+') {
+    return <Control name={placedGates[y][x]} y={y} x={x}/>;
   } else if (placedGates[y][x]) {
     return <SingleQubitGate name={placedGates[y][x]} y={y} x={x}/>;
   }

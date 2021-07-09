@@ -56,24 +56,10 @@ code {
   display:inline-block;
   vertical-align:middle;
 }
-/* .circle.plus:before,
-.circle.plus:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background:black;
+
+.fill {
+  background-color: black;
 }
-.circle.plus:before{
-    width: 2px;
-    margin: 0px auto;
-}
-.circle.plus:after{
-    margin: auto 0px;
-    height: 2px;
-} */
 
 .tooltip-text {
   display: none;
@@ -136,7 +122,6 @@ code {
   left: 0;
   border-top: 2px solid black;
   width: 100%;
-  /* transform: translateY(-1px); */
 }
 
 .top-wire:before, .bottom-wire:before {
