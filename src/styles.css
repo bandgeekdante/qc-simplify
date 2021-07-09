@@ -40,11 +40,39 @@ code {
 }
 
 .control {
-  font-family: Helvetica, 'DejaVu Sans', 'Arial Unicode MS', 'Lucida Sans Unicode', sans-serif;
   position: relative;
   font-size: 25px;
   cursor: move;
   z-index: 1;
+}
+
+.circle{
+  border:1px solid #000;
+  width:20px;
+  height:20px;
+  border-radius:100%;
+  position:relative;
+  margin:4px;
+  display:inline-block;
+  vertical-align:middle;
+}
+.circle.plus:before,
+.circle.plus:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:black;
+}
+.circle.plus:before{
+    width: 2px;
+    margin: 0px auto;
+}
+.circle.plus:after{
+    margin: auto 0px;
+    height: 2px;
 }
 
 .tooltip-text {

@@ -20,7 +20,7 @@ function ControlledGate({ name, y, x }) {
         ref={drag}
         className={`control ${x <= 3 ? 'left' : 'right'}`}
       >
-        ⊕
+        <span className="circle plus"></span>
         {!(getTips() & 2) && y >=1 && <span className="tooltip-text">Slide gates past each other to apply commutation rules!</span>}
       </div>
     </>
