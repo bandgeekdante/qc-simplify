@@ -47,7 +47,7 @@ code {
 }
 
 .circle{
-  border:1px solid #000;
+  border:2px solid #000;
   width:20px;
   height:20px;
   border-radius:100%;
@@ -56,7 +56,7 @@ code {
   display:inline-block;
   vertical-align:middle;
 }
-.circle.plus:before,
+/* .circle.plus:before,
 .circle.plus:after {
     content: '';
     position: absolute;
@@ -73,7 +73,7 @@ code {
 .circle.plus:after{
     margin: auto 0px;
     height: 2px;
-}
+} */
 
 .tooltip-text {
   display: none;
@@ -126,32 +126,30 @@ code {
   justify-content: center;
 }
 
-.wire:before {
+.wire:before, .top-wire:before, .bottom-wire:before {
   content: '';
   position: absolute;
+}
+
+.wire:before {
   top: 50%;
   left: 0;
-  border-top: 1px solid black;
+  border-top: 2px solid black;
   width: 100%;
-  transform: translateY(200%);
+  /* transform: translateY(-1px); */
+}
+
+.top-wire:before, .bottom-wire:before {
+  left: 50%;
+  border-left: 2px solid black;
+  height: calc(50% + 11px);
+  transform: translateX(-1px);
 }
 
 .top-wire:before {
-  content: '';
-  position: absolute;
-  left: 50%;
   top: 0;
-  border-left: 1px solid black;
-  height: 50%;
-  transform: translateX(-50%);
 }
 
 .bottom-wire:before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-left: 1px solid black;
-  height: 50%;
-  transform: translateX(-50%);
+  top: calc(50% - 11px);
 }
