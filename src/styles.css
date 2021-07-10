@@ -85,7 +85,6 @@ code {
   position: relative;
   font-size: 40px;
   font-weight: bold;
-  background: white;
   user-select: none;
   cursor: pointer;
 }
@@ -103,7 +102,6 @@ code {
 }
 
 .square {
-  background-color: white;
   color: black;
   width: 100%;
   height: 100%;
@@ -127,7 +125,7 @@ code {
 .top-wire:before, .bottom-wire:before {
   left: 50%;
   border-left: 2px solid black;
-  height: calc(50% + 11px);
+  height: calc(50% + 12px);
   transform: translateX(-1px);
 }
 

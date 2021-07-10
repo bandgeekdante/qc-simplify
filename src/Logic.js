@@ -389,6 +389,14 @@ function commuteHalfControl(controlGate, commuteGate, controlY, partnerY, x) {
   cancelOne(partnerY, x);
 }
 
+export function swapControl(y, x) {
+    let controlGate = placedGates[y][x];
+    placedGates[y][x] = placedGates[partners[y][x]][x];
+    placedGates[partners[y][x]][x] = controlGate;
+    tips |= 32;
+    emitChange();
+}
+
 function availableSquare(toY, toX) {
   return (toY >= 1 && toY <= maxY && !placedGates[toY][toX]) || (toY === 0 && toX === maxX);
 }
@@ -419,6 +427,7 @@ export function getTips() {
   // 4: drag a gate to the trash
   // 8: click the trash to clear the circuit
   // 16: place a control on the circuit
+  // 32: swap direction of CNOT
   return tips;
 }
 
