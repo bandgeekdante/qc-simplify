@@ -52,7 +52,7 @@ code {
   height:20px;
   border-radius:100%;
   position:relative;
-  margin:4px;
+  margin:5px;
   display:inline-block;
   vertical-align:middle;
 }
@@ -134,5 +134,5 @@ code {
 }
 
 .bottom-wire:before {
-  top: calc(50% - 11px);
+  top: calc(50% - 10px);
 }
