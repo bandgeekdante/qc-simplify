@@ -1,6 +1,6 @@
 {
   "name": "qc-simplify",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "dependencies": {
     "react": "^16.14.0",

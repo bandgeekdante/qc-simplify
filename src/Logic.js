@@ -150,13 +150,14 @@ export function observe(o) {
 
 export function placeGate(item) {
   if (item.y >= 1) {
-    cancelOne(item.y, item.x);
-    for (let diff = 1; diff <= Math.max(item.x, maxX-item.x); diff++) {
-      if (item.x - diff >= 0) {
-        cancelOne(item.y, item.x - diff);
-      }
-      if (item.x + diff <= maxX) {
-        cancelOne(item.y, item.x + diff);
+    for (let y = 1; y <= maxY; y++) {
+      for (let diff = 0; diff <= Math.max(item.x, maxX-item.x); diff++) {
+        if (item.x - diff >= 0) {
+          cancelOne(y, item.x - diff);
+        }
+        if (item.x + diff <= maxX) {
+          cancelOne(y, item.x + diff);
+        }
       }
     }
     if (!isControl(item.gate)) {
@@ -195,7 +196,6 @@ export function slideGate(item, toY, toX) {
     } else {
       commuteGate(item, toY, toX);
     }
-    cancelOne(item.y, item.x);
   } else if (availableSquare(toY, toX)) {
     placedGates[item.y][item.x] = false;
   } else {
@@ -312,11 +312,9 @@ function slideControl(item, toY, toX) {
       // slide single-qubit gates
       if (targetGate && !isControl(targetGate)) {
         placedGates[toY][item.x] = targetGate;
-        cancelOne(toY,item.x);
       }
       if (targetPartner && !isControl(targetPartner)) {
         placedGates[partnerToY][item.x] = targetPartner;
-        cancelOne(partnerToY,item.x);
       }
     }
     // place gate and partner at new locations
@@ -385,8 +383,6 @@ function commuteHalfControl(controlGate, commuteGate, controlY, partnerY, x) {
     placedGates[controlY][x] = cancelTwo(commuteGate, placedGates[controlY][x])[0];
     placedGates[partnerY][x] = cancelTwo((controlGate === 'C' ? 'X' : 'Z'), placedGates[partnerY][x])[0];
   }
-  cancelOne(controlY, x);
-  cancelOne(partnerY, x);
 }
 
 export function swapControl(y, x) {
