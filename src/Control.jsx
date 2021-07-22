@@ -4,7 +4,7 @@ import { getEmptyImage } from 'react-dnd-html5-backend';
 import { placeGate, getTips, swapControl } from './Logic'
 
 function Control({ name, y, x }) {
-  const [, drag, preview] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     item: {
       type: ItemTypes.GATE,
       x: x,
@@ -12,6 +12,9 @@ function Control({ name, y, x }) {
       gate: name,
     },
     end: (item) => placeGate(item),
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging()
+    }),
   });
   preview(getEmptyImage(), { captureDraggingState: true });
   return (
@@ -22,8 +25,8 @@ function Control({ name, y, x }) {
         onDoubleClick= {() => swapControl(y,x)}
       >
         <span className={`circle${name === 'C' ? ' fill' : ''}`}></span>
-        {!(getTips() & 16) && <span className="tooltip-text">Drag this control to make a CNOT gate!</span>}
-        {!(getTips() & 32) && y >=1 && <span className="tooltip-text">Double-click to swap the CNOT direction!</span>}
+        {!(getTips() & 16) && !isDragging && <span className="tooltip-text">Drag this control to make a CNOT gate!</span>}
+        {!(getTips() & 32) && !isDragging && y >=1 && <span className="tooltip-text">Double-click to swap the CNOT direction!</span>}
       </div>
     </>
   )

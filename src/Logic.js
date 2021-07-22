@@ -386,11 +386,13 @@ function commuteHalfControl(controlGate, commuteGate, controlY, partnerY, x) {
 }
 
 export function swapControl(y, x) {
+  if (y >= 1) {
     let controlGate = placedGates[y][x];
     placedGates[y][x] = placedGates[partners[y][x]][x];
     placedGates[partners[y][x]][x] = controlGate;
     tips |= 32;
     emitChange();
+  }
 }
 
 function availableSquare(toY, toX) {
