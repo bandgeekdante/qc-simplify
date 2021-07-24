@@ -33,6 +33,17 @@ function cancelOne(y, x) {
 }
 
 function cancelThree(y, x) {
+  if (isControl(placedGates[y][x])) {
+    let partnerY = partners[y][x];
+    if (placedGates[y][x-1] === 'H' && placedGates[y][x+1] === 'H' && 
+        placedGates[partnerY][x-1] === 'H' && placedGates[partnerY][x+1] === 'H') {
+      placedGates[y][x-1] = false;
+      placedGates[y][x+1] = false;
+      placedGates[partnerY][x-1] = false;
+      placedGates[partnerY][x+1] = false;
+      swapControl(y, x, true);
+    }
+  }
   if (placedGates[y][x-1] === placedGates[y][x+1] && !isControl(placedGates[y][x+1])) {
     if (placedGates[y][x-1] === placedGates[y][x]) {
       // XXX = X, YYY = Y, ZZZ = Z, HHH = H
@@ -104,7 +115,6 @@ function cancelTwoControls(y, x1, x2) {
     partners[y][x2] = false;
     partners[partnerY][x1] = false;
     partners[partnerY][x2] = false;
-
     emitChange();
   }
 }
@@ -385,12 +395,14 @@ function commuteHalfControl(controlGate, commuteGate, controlY, partnerY, x) {
   }
 }
 
-export function swapControl(y, x) {
+export function swapControl(y, x, fromH = false) {
   if (y >= 1) {
     let controlGate = placedGates[y][x];
     placedGates[y][x] = placedGates[partners[y][x]][x];
     placedGates[partners[y][x]][x] = controlGate;
-    tips |= 32;
+    if (!fromH) {
+      tips |= 32;
+    }
     emitChange();
   }
 }
