@@ -144,29 +144,16 @@ code {
 }
 
 .modal {
-  font-size: 12px;
+  font-size: 15px;
   border: 2px solid black;
   margin: 15px;
   background: white;
-}
-
-.modal > .header {
-  width: 100%;
-  border-bottom: 1px solid gray;
-  font-size: 18px;
-  text-align: center;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal > .content {
-  width: 100%;
-  padding: 10px 5px;
-}
-
-.modal > .actions {
-  width: 100%;
-  padding: 10px 5px;
-  margin: auto;
-  text-align: center;
+  padding: 10px;
 }
 
 .modal > .close {

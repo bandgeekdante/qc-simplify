@@ -10,6 +10,14 @@ function emitChange() {
   observer(placedGates, globalPhase);
 }
 
+export function observe(o) {
+  if (observer) {
+    throw new Error('Multiple observers not implemented.');
+  }
+  observer = o;
+  emitChange();
+}
+
 function cancelOne(y, x) {
   if (x > 0 && x < maxX && placedGates[y][x] && placedGates[y][x-1] && placedGates[y][x+1]) {
     cancelThree(y, x);
@@ -148,14 +156,6 @@ function PauliGate(number) {
   } else if (number === 0) {
     return 'Z';
   }
-}
-
-export function observe(o) {
-  if (observer) {
-    throw new Error('Multiple observers not implemented.');
-  }
-  observer = o;
-  emitChange();
 }
 
 export function placeGate(item) {
