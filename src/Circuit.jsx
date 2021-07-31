@@ -1,8 +1,11 @@
 import React from 'react';
+import Popup from 'reactjs-popup';
+// import markdown from 'https://raw.githubusercontent.com/bandgeekdante/qc-simplify/main/README.md';
+import ReactMarkdown from 'react-markdown';
 import SingleQubitGate from './SingleQubitGate';
-import Control from './Control'
+import Control from './Control';
 import CircuitSquare from './CircuitSquare';
-import Trash from './Trash'
+import Trash from './Trash';
 import { DndProvider } from 'react-dnd-multi-backend';
 import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
 
@@ -71,7 +74,48 @@ function renderGlobalPhase(globalPhase) {
       }}
     >
       Global phase = {displayGlobalPhase(globalPhase)}
+      {showReadme()}
     </div>
+  )
+}
+
+function showReadme() {
+  let markdown;
+
+  fetch("https://raw.githubusercontent.com/bandgeekdante/qc-simplify/main/README.md")
+      .then((response) => {
+          if (response.ok) return response.text();
+          else return Promise.reject("Didn't fetch text correctly");
+      })
+      .then((text) => {
+          markdown = text;
+      })
+      .catch((error) => console.error(error));
+  return (
+    <Popup
+        trigger={<button className="button"> About </button>}
+        modal
+      >
+        {close => (
+          <div className="modal">
+            <button className="close" onClick={close}>
+              &times;
+            </button>
+            {/* <div className="header"> Modal Title </div> */}
+            {/* <div className="content">
+              {' '}
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque, a nostrum.
+              Dolorem, repellat quidem ut, minima sint vel eveniet quibusdam voluptates
+              delectus doloremque, explicabo tempore dicta adipisci fugit amet dignissimos?
+              <br />
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur sit
+              commodi beatae optio voluptatum sed eius cumque, delectus saepe repudiandae
+              explicabo nemo nam libero ad, doloribus, voluptas rem alias. Vitae?
+            </div> */}
+            <ReactMarkdown children={markdown} />
+          </div>
+        )}
+      </Popup>
   )
 }
 
