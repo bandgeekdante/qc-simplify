@@ -2,7 +2,7 @@
 
 I'm building QC Simplify to help people gain a better intuition into how quantum circuits work, and especially how gates interact with each other. Feel free to get in touch on [LinkedIn](https://www.linkedin.com/in/dante-bencivenga/)!
 
-You can find the website at <https://www.qcsimplify.com/> and the source code at <https://github.com/bandgeekdante/qc-simplify>.
+You can find the website at <https://www.qcsimplify.com/>.
 
 ## Features
 

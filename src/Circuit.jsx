@@ -1,14 +1,10 @@
 import React from 'react';
-import Popup from 'reactjs-popup';
-import ReactMarkdown from 'react-markdown';
 import SingleQubitGate from './SingleQubitGate';
 import Control from './Control';
 import CircuitSquare from './CircuitSquare';
 import Trash from './Trash';
 import { DndProvider } from 'react-dnd-multi-backend';
 import HTML5toTouch from 'react-dnd-multi-backend/dist/cjs/HTML5toTouch';
-
-let markdown = '';
 
 function renderSquare(i, placedGates) {
   const y = Math.floor(i / 8);
@@ -79,36 +75,6 @@ function renderGlobalPhase(globalPhase) {
   )
 }
 
-function showReadme() {
-  if (!markdown) {
-    fetch("https://raw.githubusercontent.com/bandgeekdante/qc-simplify/main/README.md")
-      .then((response) => {
-          if (response.ok) return response.text();
-          else return Promise.reject("Didn't fetch text correctly");
-      })
-      .then((text) => {
-          markdown = text;
-      })
-      .catch((error) => console.error(error));
-  }
-
-  return (
-    <Popup
-          trigger={<button className="button"> About </button>}
-          modal
-        >
-           {close => (
-             <div className="modal">
-               <button className="close" onClick={close}>
-                 &times;
-               </button>
-               <ReactMarkdown children={markdown} className="content"/>
-             </div>
-           )}
-      </Popup>
-  )
-}
-
 export default function Circuit({ placedGates, globalPhase }) {
   const squares = [];
   for (let i = 0; i < 7*8; i++) {
@@ -131,7 +97,13 @@ export default function Circuit({ placedGates, globalPhase }) {
         {squares}
       </div>
     </DndProvider>
-    {showReadme()}
+    <a href="https://github.com/bandgeekdante/qc-simplify#readme"
+       target="_blank"
+       rel="noreferrer">
+    <button className="button">
+      About
+    </button>
+    </a>
     </div>
   );
 }

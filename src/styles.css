@@ -141,31 +141,5 @@ code {
   position: fixed;
   bottom: 0;
   left: 0;
-}
-
-.modal {
-  font-size: 15px;
-  border: 2px solid black;
-  margin: 15px;
-  background: white;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal > .content {
-  padding: 10px;
-}
-
-.modal > .close {
   cursor: pointer;
-  position: absolute;
-  display: block;
-  padding: 2px 5px;
-  line-height: 20px;
-  right: 0;
-  top: 0;
-  font-size: 24px;
-  background: #ffffff;
-  border-radius: 18px;
-  border: 1px solid #cfcece;
 }
