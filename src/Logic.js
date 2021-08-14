@@ -42,14 +42,13 @@ function cancelOne(y, x) {
 
 function cancelThree(y, x) {
   if (isControl(placedGates[y][x])) {
-    let partnerY = partners[y][x];
-    if (placedGates[y][x-1] === 'H' && placedGates[y][x+1] === 'H' && 
-        placedGates[partnerY][x-1] === 'H' && placedGates[partnerY][x+1] === 'H') {
-      placedGates[y][x-1] = false;
-      placedGates[y][x+1] = false;
-      placedGates[partnerY][x-1] = false;
-      placedGates[partnerY][x+1] = false;
-      swapControl(y, x, true);
+    if (placedGates[y][x-1] === 'H' && placedGates[y][x+1] === 'H') {
+      if (placedGates[y][x] === '+' || placedGates[partners[y][x]][x] === 'C') {
+        placedGates[y][x] = placedGates[y][x] === 'C' ? '+' : 'C';
+        placedGates[y][x-1] = false;
+        placedGates[y][x+1] = false;
+        cancelThree(partners[y][x], x);
+      }
     }
   }
   if (placedGates[y][x-1] === placedGates[y][x+1] && !isControl(placedGates[y][x+1])) {
@@ -112,9 +111,9 @@ function cancelTwo(first, second) {
 }
 
 function cancelTwoControls(y, x1, x2) {
-  if (isControl(placedGates[y][x1]) && placedGates[y][x2] === placedGates[y][x1] &&
-       partners[y][x1] === partners[y][x2]) {
-    let partnerY = partners[y][x1];
+  let partnerY = partners[y][x1];
+  if (isControl(placedGates[y][x1]) && placedGates[y][x1] === placedGates[y][x2] &&
+      partnerY === partners[y][x2] && placedGates[partnerY][x1] === placedGates[partnerY][x2]) {
     placedGates[y][x1] = false;
     placedGates[y][x2] = false;
     placedGates[partnerY][x1] = false;
@@ -248,7 +247,8 @@ function slideControl(item, toY, toX) {
   let targetGate = placedGates[toY][toX];
   let partnerY = partners[item.y][item.x];
   let partnerToY = partnerY;
-  let partnerGate = item.gate === 'C' ? '+' : 'C';
+  // default CNOT rather than CZ
+  let partnerGate = partnerY ? (placedGates[partnerY][item.x]) : (item.gate === 'C' ? '+' : 'C');
   let targetPartner = false;
   if (partnerY) {
     if (!canCommuteControl(targetGate, item, toY, toX, partnerY)) {
@@ -312,12 +312,12 @@ function slideControl(item, toY, toX) {
         return false;
       }
       if (targetGate || targetPartner) {
-        tips |= 2;
+        tips |= (2 + 32);
       }
     }
     if ((!targetGate || PauliNumber(targetGate)) && (!targetPartner || PauliNumber(targetPartner))) {
-      commuteHalfControl(item.gate, targetGate, item.y, partnerY, item.x);
-      commuteHalfControl(partnerGate, targetPartner, partnerY, item.y, item.x);
+      commuteHalfControl(item.gate, partnerGate, targetGate, item.y, partnerY, item.x);
+      commuteHalfControl(partnerGate, item.gate, targetPartner, partnerY, item.y, item.x);
     } else {
       // slide single-qubit gates
       if (targetGate && !isControl(targetGate)) {
@@ -343,22 +343,28 @@ function canCommuteControl(targetGate, item, toY, toX, partnerY) {
   if (targetGate && toY >= 1) {
     // check if we should commute the control
     let targetPartner = placedGates[partnerY][toX];
+    let partnerGate = placedGates[partnerY][item.x];
+    let partnerMatches = !PauliNumber(controlToPauli(targetPartner)) ||
+                         controlToPauli(partnerGate) === controlToPauli(targetPartner);
     if (item.y === toY && Math.abs(toX-item.x) === 1) {
-      if (targetGate === 'H' && targetPartner === 'H') {
-        // both H swap direction of control
+      if (targetGate === 'H') {
+        // avoid getting + on both ends of control or adding extra gates
+        if (!partnerMatches || (item.gate === 'C' && (((partnerGate === 'C') === (targetPartner === 'H'))))) {
+          return false;
+        }
+        // swap control type
         item.gate = item.gate === 'C' ? '+' : 'C';
         return true;
       }
-      if (!PauliNumber(targetGate) && targetGate !== item.gate) {
-        // cannot slide horizontally across H or opposite control
+      if (isControl(targetGate) && targetGate !== item.gate) {
+        // cannot slide horizontally across opposite control
         return false;
       }
       if (isControl(targetGate)) {
-        let partnerGate = placedGates[partnerY][item.x];
         let oppositePartner = placedGates[partners[toY][toX]][toX];
         let oppositePartnerCommuting = placedGates[partners[toY][toX]][item.x];
-        let partnerMatches = !targetPartner || controlToPauli(partnerGate) === controlToPauli(targetPartner);
-        let oppositeMatches = !oppositePartnerCommuting || controlToPauli(oppositePartner) === controlToPauli(oppositePartnerCommuting);
+        let oppositeMatches = !PauliNumber(controlToPauli(oppositePartnerCommuting)) ||
+                              controlToPauli(oppositePartner) === controlToPauli(oppositePartnerCommuting);
         if (partnerMatches !== oppositeMatches) {
           // either they both match (so no extra gates get created) or neither match (so extra gates cancel out)
           return false;
@@ -383,27 +389,23 @@ function controlToPauli(gate) {
   }
 }
 
-function commuteHalfControl(controlGate, commuteGate, controlY, partnerY, x) {
-  if ((controlGate === 'C' && commuteGate === 'Z') || (controlGate === '+' && commuteGate === 'X')) {
-    placedGates[controlY][x] = cancelTwo(commuteGate, placedGates[controlY][x])[0]
-  } else if ((controlGate === '+' && commuteGate === 'Z') || (controlGate === 'C' && commuteGate === 'X')) {
+function commuteHalfControl(controlGate, partnerGate, commuteGate, controlY, partnerY, x) {
+  if (commuteGate) {
     placedGates[controlY][x] = cancelTwo(commuteGate, placedGates[controlY][x])[0];
-    placedGates[partnerY][x] = cancelTwo(commuteGate, placedGates[partnerY][x])[0];
-  } else if (commuteGate === 'Y') {
-    placedGates[controlY][x] = cancelTwo(commuteGate, placedGates[controlY][x])[0];
-    placedGates[partnerY][x] = cancelTwo((controlGate === 'C' ? 'X' : 'Z'), placedGates[partnerY][x])[0];
+    if (controlToPauli(controlGate) !== commuteGate) {
+      placedGates[partnerY][x] = cancelTwo(controlToPauli(partnerGate), placedGates[partnerY][x])[0];
+    }
   }
 }
 
-export function swapControl(y, x, fromH = false) {
+export function swapControl(y, x) {
   if (y >= 1) {
-    let controlGate = placedGates[y][x];
-    placedGates[y][x] = placedGates[partners[y][x]][x];
-    placedGates[partners[y][x]][x] = controlGate;
-    if (!fromH) {
-      tips |= 32;
+    placedGates[y][x] = placedGates[y][x] === 'C' ? '+' : 'C';
+    if (placedGates[y][x] === '+' && placedGates[partners[y][x]][x] === '+') {
+      placedGates[partners[y][x]][x] = 'C';
     }
-    emitChange();
+    tips |= 32;
+    placeGate({x: x, y: y, gate: placedGates[y][x]});
   }
 }
 

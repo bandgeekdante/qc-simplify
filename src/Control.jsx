@@ -26,7 +26,9 @@ function Control({ name, y, x }) {
       >
         <span className={`circle${name === 'C' ? ' fill' : ''}`}></span>
         {!(getTips() & 16) && !isDragging && <span className="tooltip-text">Drag this control to make a CNOT gate!</span>}
-        {!(getTips() & 32) && !isDragging && y >=1 && <span className="tooltip-text">Double-click to swap the CNOT direction!</span>}
+        {!(getTips() & 32) && !isDragging && y >=1 &&
+         ((name === 'C' && <span className="tooltip-text">Double-click to swap the CNOT direction!</span>)
+                        || <span className="tooltip-text">Double-click to make a Control-Z gate!</span>)}
       </div>
     </>
   )
