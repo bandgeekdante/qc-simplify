@@ -20,5 +20,4 @@ When you slide gates across each other, a commutation rule will apply to preserv
 
 ## Future Directions
 
-* Control-Z
 * Building mode / simplifying mode toggle
